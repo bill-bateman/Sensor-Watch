@@ -29,6 +29,7 @@
 
 static uint8_t focus_min = 25;
 static uint8_t break_min = 5;
+static uint8_t break_long_min = 20;
 
 static inline int32_t get_tz_offset(movement_settings_t *settings) {
     return movement_timezone_offsets[settings->bit.time_zone] * 60;
@@ -38,8 +39,10 @@ static uint8_t get_length(tomato_state_t *state) {
     uint8_t length;
     if (state->kind == tomato_focus) {
         length = focus_min;
-    } else {
+    } else if (state->kind == tomato_break) {
         length = break_min;
+    } else {
+        length = break_long_min;
     }
 
     return length;
@@ -74,6 +77,7 @@ static void tomato_draw(tomato_state_t *state) {
 
     switch (state->mode) {
         case tomato_run:
+        case tomato_pause:
             delta = state->target_ts - state->now_ts;
             result = div(delta, 60);
             min = result.quot;
@@ -100,8 +104,9 @@ static void tomato_ring(tomato_state_t *state) {
     movement_play_signal();
     tomato_reset(state);
     if (state->kind == tomato_focus) {
-        state->kind = tomato_break;
         state->done_count++;
+        // 1 long break after 3 short breaks
+        state->kind = state->done_count % 4 == 0 ? tomato_long_break : tomato_break;
     } else {
         state->kind = tomato_focus;
     }
@@ -115,7 +120,7 @@ void tomato_face_setup(movement_settings_t *settings, uint8_t watch_face_index, 
         *context_ptr = malloc(sizeof(tomato_state_t));
         tomato_state_t *state = (tomato_state_t*)*context_ptr;
         memset(*context_ptr, 0, sizeof(tomato_state_t));
-        state->mode=tomato_ready;
+        state->mode = tomato_ready;
         state->kind= tomato_focus;
         state->done_count = 0;
         state->visible = true;
@@ -124,7 +129,7 @@ void tomato_face_setup(movement_settings_t *settings, uint8_t watch_face_index, 
 
 void tomato_face_activate(movement_settings_t *settings, void *context) {
     tomato_state_t *state = (tomato_state_t *)context;
-    if (state->mode == tomato_run) {
+    if (state->mode == tomato_run || state->mode == tomato_pause) {
         watch_date_time now = watch_rtc_get_date_time();
         state->now_ts = watch_utility_date_time_to_unix_time(now, get_tz_offset(settings));
         watch_set_indicator(WATCH_INDICATOR_BELL);
@@ -154,12 +159,17 @@ bool tomato_face_loop(movement_event_t event, movement_settings_t *settings, voi
                 } else {
                     state->kind = tomato_break;
                 }
+            } else {
+                // toggle pause
+                if (state->mode == tomato_run) state->mode = tomato_pause;
+                else if (state->mode == tomato_pause) state->mode = tomato_run;
             }
             tomato_draw(state);
             break;
         case EVENT_ALARM_BUTTON_UP:
             switch(state->mode) {
                 case tomato_run:
+                case tomato_pause:
                     tomato_reset(state);
                     break;
                 case tomato_ready:
