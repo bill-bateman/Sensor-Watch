@@ -126,6 +126,7 @@ SRCS += \
   ../watch_faces/clock/minute_repeater_decimal_face.c \
   ../watch_faces/complication/tuning_tones_face.c \
   ../watch_faces/complication/kitchen_conversions_face.c \
+  ../watch_faces/clock/simple_clock_no_secs_face.c \
 # New watch faces go above this line.
 
 # Leave this line at the bottom of the file; it has all the targets for making your project.
