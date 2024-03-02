@@ -84,4 +84,18 @@ int8_t signal_tune[] = {
 };
 #endif // SIGNAL_TUNE_KIM_POSSIBLE
 
+#ifdef SIGNAL_TUNE_TANK
+int8_t signal_tune[] = {
+    BUZZER_NOTE_G6, 6,
+    BUZZER_NOTE_REST, 2,
+    BUZZER_NOTE_G6, 6,
+    BUZZER_NOTE_REST, 8,
+    //repeat last 4 notes 3 times
+    -4, 3,
+    BUZZER_NOTE_A6SHARP_B6FLAT, 16,
+    BUZZER_NOTE_B6, 16,
+    0
+};
+#endif // SIGNAL_TUNE_TANK
+
 #endif // MOVEMENT_CUSTOM_SIGNAL_TUNES_H_
