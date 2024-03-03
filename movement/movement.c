@@ -63,10 +63,10 @@
 
 // Set default LED colors if not set
 #ifndef MOVEMENT_DEFAULT_RED_COLOR
-#define MOVEMENT_DEFAULT_RED_COLOR 0x0
+#define MOVEMENT_DEFAULT_RED_COLOR 0xF
 #endif
 #ifndef MOVEMENT_DEFAULT_GREEN_COLOR
-#define MOVEMENT_DEFAULT_GREEN_COLOR 0xF
+#define MOVEMENT_DEFAULT_GREEN_COLOR 0x0
 #endif
 
 #if __EMSCRIPTEN__
@@ -353,7 +353,7 @@ void app_init(void) {
 
     movement_state.settings.bit.led_red_color = MOVEMENT_DEFAULT_RED_COLOR;
     movement_state.settings.bit.led_green_color = MOVEMENT_DEFAULT_GREEN_COLOR;
-    movement_state.settings.bit.button_should_sound = true;
+    movement_state.settings.bit.button_should_sound = false;
     movement_state.settings.bit.le_interval = 2;
     movement_state.settings.bit.led_duration = 1;
     movement_state.light_ticks = -1;
