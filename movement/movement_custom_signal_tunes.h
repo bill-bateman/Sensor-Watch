@@ -86,14 +86,17 @@ int8_t signal_tune[] = {
 
 #ifdef SIGNAL_TUNE_TANK
 int8_t signal_tune[] = {
-    BUZZER_NOTE_G6, 6,
+    // quarter note =~ 28
+    // unit here is for number of ticks at 64 hz
+    // tank is roughly 138 bpm
+    BUZZER_NOTE_G6, 5,
     BUZZER_NOTE_REST, 2,
-    BUZZER_NOTE_G6, 6,
-    BUZZER_NOTE_REST, 8,
+    BUZZER_NOTE_G6, 5,
+    BUZZER_NOTE_REST, 9,
     //repeat last 4 notes 3 times
     -4, 3,
-    BUZZER_NOTE_A6SHARP_B6FLAT, 16,
-    BUZZER_NOTE_B6, 16,
+    BUZZER_NOTE_A6SHARP_B6FLAT, 14,
+    BUZZER_NOTE_B6, 14,
     0
 };
 #endif // SIGNAL_TUNE_TANK
