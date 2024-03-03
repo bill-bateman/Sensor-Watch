@@ -33,7 +33,6 @@ const watch_face_t watch_faces[] = {
     stock_stopwatch_face,
     countdown_face,
     interval_face,
-    totp_face,
     thermistor_readout_face,
     voltage_face,
     sunrise_sunset_face,
