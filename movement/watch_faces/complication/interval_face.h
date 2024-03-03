@@ -45,30 +45,33 @@
  * - Press and hold the light button to enter settings mode for each interval
  *   timer slot.
  *
- * - Each interval timer has 1 to 4 phases of customizable length like so:
- *   (1) prepare/warum up --> (2) work --> (3) break --> (4) cool down.
+ * - Each interval timer has 1 to 5 phases of customizable length like so:
+ *   (1) prepare/warum up --> (2) work --> (3) break --> (4) long break
+ *   --> (5) cool down.
  *   When setting up or running a timer, each of these phases is displayed by
- *   the letters "PR" (prepare), "WO" (work), "BR" (break), "CD" (cool down).
+ *   the letters "WA" (warm up), "WO" (work), "BR" (break), "LB" (long break)
+ *   "CD" (cool down).
  *
  * - Each of these phases is optional, you can set the corresponding
  *   minutes and seconds to zero. But at least one phase needs to be set, if
  *   you want to use the timer.
  *
- * - You can define the number of rounds either only for the work
- *   phase and/or for the combination of work + break phase. Let's say you
- *   want an interval timer that counts 3 rounds of 30 seconds work, 
- *   followed by 20 seconds rest:
- *         work 30s --> work 30s --> work 30s --> break 20s
- *   You can do this by setting 30s for the "WO"rk phase and setting a 3
+ * - You can define the number of rounds either the work + break phase
+ *   and/or the work + break + long break phase. Let's say you want an
+ *   interval timer that counts 2 rounds of 30 seconds work, followed
+ *   by 20 seconds rest:
+ *         work 30s --> break 20s --> work 30s --> break 20s
+ *   You can do this by setting 30s for the "WO"rk phase and setting a 2
  *   in the lower right hand corner of the work page. The "LAP" indicator
  *   lights up at this position, to explain that we are setting laps here.
  *   After that, set the "BR"eak phase to 20s and leave the rest as it is.
  *
  * - If you want to set up a certain number of "full rounds", consisting
- *   of work phase(s) plus breaks, you can do so at the "BR"eak page. The
- *   number in the lower right hand corner determines the number of full
- *   rounds to be counted. A "-" means, that there is no limit and the 
- *   timer keeps alternating between work and break phases.
+ *   of work phase(s) plus breaks plus long breaks, you can do so at the
+ *   "LB" (long break) page. The number in the lower right hand corner
+ *   determines the number of full rounds to be counted. A "-" means
+ *   that there is no limit and the timer keeps alternating between work
+ *   and break phases.
  *
  * - This watch face comes with several pre-defined interval timers,
  *   suitable for hiit training (timer slots 1 to 4) as well as doing
@@ -88,6 +91,8 @@ typedef struct {
     uint8_t work_seconds;
     uint8_t break_minutes;
     uint8_t break_seconds;
+    uint8_t long_break_minutes;
+    uint8_t long_break_seconds;
     uint8_t cooldown_minutes;
     uint8_t cooldown_seconds;
     uint8_t work_rounds;
