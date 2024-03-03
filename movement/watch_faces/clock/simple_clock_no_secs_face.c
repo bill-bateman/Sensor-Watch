@@ -31,8 +31,8 @@
 
 static void _update_alarm_indicator(bool settings_alarm_enabled, simple_clock_no_secs_state_t *state) {
     state->alarm_enabled = settings_alarm_enabled;
-    if (state->alarm_enabled) watch_set_indicator(WATCH_INDICATOR_SIGNAL);
-    else watch_clear_indicator(WATCH_INDICATOR_SIGNAL);
+    if (state->alarm_enabled) watch_set_indicator(WATCH_INDICATOR_BELL);
+    else watch_clear_indicator(WATCH_INDICATOR_BELL);
 }
 
 void simple_clock_no_secs_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr) {
