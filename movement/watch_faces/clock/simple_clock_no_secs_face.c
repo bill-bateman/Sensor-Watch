@@ -129,6 +129,7 @@ bool simple_clock_no_secs_face_loop(movement_event_t event, movement_settings_t 
             // toggle seconds
             state->show_seconds = !state->show_seconds;
             
+            date_time = watch_rtc_get_date_time();
             pos = 8;
             if (state->show_seconds) sprintf(buf, "%02d", date_time.unit.second);
             else sprintf(buf, "  ");
