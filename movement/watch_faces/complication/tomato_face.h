@@ -66,6 +66,7 @@ typedef struct {
     tomato_kind kind;
     uint8_t done_count;
     bool visible;
+    uint8_t watch_face_index;
 } tomato_state_t;
 
 void tomato_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr);

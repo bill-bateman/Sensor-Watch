@@ -15,7 +15,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFtomato_ringEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -100,8 +100,7 @@ static void tomato_reset(tomato_state_t *state) {
     watch_clear_indicator(WATCH_INDICATOR_BELL);
 }
 
-static void tomato_ring(tomato_state_t *state) {
-    movement_play_signal();
+static void tomato_next(tomato_state_t *state) {
     tomato_reset(state);
     if (state->kind == tomato_focus) {
         state->done_count++;
@@ -124,6 +123,7 @@ void tomato_face_setup(movement_settings_t *settings, uint8_t watch_face_index, 
         state->kind= tomato_focus;
         state->done_count = 0;
         state->visible = true;
+        state->watch_face_index = watch_face_index;
     }
 }
 
@@ -160,30 +160,35 @@ bool tomato_face_loop(movement_event_t event, movement_settings_t *settings, voi
                     state->kind = tomato_break;
                 }
             } else {
-                // toggle pause
-                if (state->mode == tomato_run) state->mode = tomato_pause;
-                else if (state->mode == tomato_pause) state->mode = tomato_run;
+                // skip to the next kind (without ringing)
+                tomato_next(state);
             }
             tomato_draw(state);
             break;
         case EVENT_ALARM_BUTTON_UP:
             switch(state->mode) {
-                case tomato_run:
-                case tomato_pause:
-                    tomato_reset(state);
+                case tomato_run: // pause
+                    state->mode = tomato_pause;
                     break;
-                case tomato_ready:
+                case tomato_pause: // unpause
+                    state->mode = tomato_run;
+                    break;
+                case tomato_ready: // start
                     tomato_start(state, settings);
                     break;
             }
             tomato_draw(state);
-
             break;
         case EVENT_ALARM_LONG_PRESS:
+            // hard reset
+            state->kind = tomato_focus;
             state->done_count = 0;
+            tomato_reset(state);
             break;
         case EVENT_BACKGROUND_TASK:
-            tomato_ring(state);
+            movement_move_to_face(state->watch_face_index); // snap back to us
+            movement_play_signal();
+            tomato_next(state);
             tomato_draw(state);
             break;
         case EVENT_TIMEOUT:
