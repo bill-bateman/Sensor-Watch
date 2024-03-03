@@ -109,7 +109,7 @@ bool simple_clock_no_secs_face_loop(movement_event_t event, movement_settings_t 
                     if (date_time.unit.hour == 0) date_time.unit.hour = 12;
                 }
                 pos = 0;
-                if (event.event_type == EVENT_LOW_ENERGY_UPDATE) {
+                if (event.event_type == EVENT_LOW_ENERGY_UPDATE || !state->show_seconds) {
                     sprintf(buf, "%s%2d%2d%02d  ", watch_utility_get_weekday(date_time), date_time.unit.day, date_time.unit.hour, date_time.unit.minute);
                 } else {
                     sprintf(buf, "%s%2d%2d%02d%02d", watch_utility_get_weekday(date_time), date_time.unit.day, date_time.unit.hour, date_time.unit.minute, date_time.unit.second);
