@@ -135,7 +135,7 @@ static void reset(countdown_state_t *state) {
 }
 
 static void ring(countdown_state_t *state) {
-    movement_play_alarm();
+    movement_play_signal();
     reset(state);
 }
 
