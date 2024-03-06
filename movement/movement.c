@@ -490,7 +490,7 @@ bool app_loop(void) {
     // if we have timed out of our low energy mode countdown, enter low energy mode.
     if (movement_state.le_mode_ticks == 0) {
         movement_state.le_mode_ticks = -1;
-        watch_register_extwake_callback(BTN_ALARM, cb_alarm_btn_extwake, true);
+        watch_register_extwake_callback(BTN_ALARM, cb_alarm_btn_extwake, false);
         event.event_type = EVENT_NONE;
         event.subsecond = 0;
 
