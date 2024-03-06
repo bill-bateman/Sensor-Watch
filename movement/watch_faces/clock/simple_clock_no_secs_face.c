@@ -122,8 +122,14 @@ bool simple_clock_no_secs_face_loop(movement_event_t event, movement_settings_t 
                 if (watch_tick_animation_is_running()) watch_stop_tick_animation();
             }
             watch_display_string(buf, pos);
+            
             // update alarm indicator
             if (state->alarm_enabled != settings->bit.alarm_enabled) _update_alarm_indicator(settings->bit.alarm_enabled, state);
+            
+            // show signal when asleep
+            if (event.event_type == EVENT_LOW_ENERGY_UPDATE) watch_set_indicator(WATCH_INDICATOR_SIGNAL);
+            else watch_clear_indicator(WATCH_INDICATOR_SIGNAL);
+
             break;
         case EVENT_ALARM_BUTTON_UP:
             // toggle seconds
