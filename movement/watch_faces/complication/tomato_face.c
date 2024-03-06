@@ -60,6 +60,18 @@ static void tomato_start(tomato_state_t *state, movement_settings_t *settings) {
     watch_set_indicator(WATCH_INDICATOR_BELL);
 }
 
+static void tomato_restart(tomato_state_t *state, movement_settings_t *settings) {
+    watch_date_time now = watch_rtc_get_date_time();
+    uint32_t delta = state->target_ts - state->now_ts;
+
+    state->mode = tomato_run;
+    state->now_ts = watch_utility_date_time_to_unix_time(now, get_tz_offset(settings));
+    state->target_ts = state->now_ts + delta;
+    watch_date_time target_dt = watch_utility_date_time_from_unix_time(state->target_ts, get_tz_offset(settings));
+    movement_schedule_background_task(target_dt);
+    watch_set_indicator(WATCH_INDICATOR_BELL);
+}
+
 static void tomato_draw(tomato_state_t *state) {
     char buf[16];
 
@@ -129,11 +141,12 @@ void tomato_face_setup(movement_settings_t *settings, uint8_t watch_face_index, 
 
 void tomato_face_activate(movement_settings_t *settings, void *context) {
     tomato_state_t *state = (tomato_state_t *)context;
-    if (state->mode == tomato_run || state->mode == tomato_pause) {
+    if (state->mode == tomato_run) {
         watch_date_time now = watch_rtc_get_date_time();
         state->now_ts = watch_utility_date_time_to_unix_time(now, get_tz_offset(settings));
-        watch_set_indicator(WATCH_INDICATOR_BELL);
     }
+    if (state->mode == tomato_run || state->mode == tomato_pause)        
+        watch_set_indicator(WATCH_INDICATOR_BELL);
     watch_set_colon();
     state->visible = true;
 }
@@ -169,9 +182,10 @@ bool tomato_face_loop(movement_event_t event, movement_settings_t *settings, voi
             switch(state->mode) {
                 case tomato_run: // pause
                     state->mode = tomato_pause;
+                    movement_cancel_background_task();
                     break;
                 case tomato_pause: // unpause
-                    state->mode = tomato_run;
+                    tomato_restart(state, settings);
                     break;
                 case tomato_ready: // start
                     tomato_start(state, settings);
