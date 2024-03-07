@@ -141,6 +141,10 @@ bool simple_clock_no_secs_face_loop(movement_event_t event, movement_settings_t 
             else sprintf(buf, "  ");
             watch_display_string(buf, pos);
             break;
+        case EVENT_ALARM_LONG_UP:
+            // go to sleep
+            movement_force_sleep();
+            break;
         default:
             return movement_default_loop_handler(event, settings);
     }

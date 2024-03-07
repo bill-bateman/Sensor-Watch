@@ -292,6 +292,8 @@ void movement_illuminate_led(void);
 
 void movement_request_tick_frequency(uint8_t freq);
 
+void movement_force_sleep(void);
+
 // note: watch faces can only schedule a background task when in the foreground, since
 // movement will associate the scheduled task with the currently active face.
 void movement_schedule_background_task(watch_date_time date_time);
