@@ -132,7 +132,6 @@ void cb_light_btn_interrupt(void);
 void cb_alarm_btn_interrupt(void);
 void cb_alarm_btn_extwake(void);
 void cb_alarm_fired(void);
-void cb_a4_extwake(void);
 void cb_fast_tick(void);
 void cb_tick(void);
 
@@ -409,7 +408,6 @@ void app_setup(void) {
     }
     if (movement_state.le_mode_ticks != -1) {
         watch_disable_extwake_interrupt(BTN_ALARM);
-        watch_disable_extwake_interrupt(A4);
 
         watch_enable_external_interrupts();
         watch_register_interrupt_callback(BTN_MODE, cb_mode_btn_interrupt, INTERRUPT_TRIGGER_BOTH);
@@ -494,11 +492,9 @@ bool app_loop(void) {
     if (event.event_type == EVENT_TICK && movement_state.has_scheduled_background_task) _movement_handle_scheduled_tasks();
 
     // if we have timed out of our low energy mode countdown, enter low energy mode.
-    // but only do this if the LED is off
-    if (movement_state.le_mode_ticks == 0 && movement_state.light_ticks == -1) {
+    if (movement_state.le_mode_ticks == 0) {
         movement_state.le_mode_ticks = -1;
         watch_register_extwake_callback(BTN_ALARM, cb_alarm_btn_extwake, false);
-        watch_register_extwake_callback(A4, cb_a4_extwake, true);
         event.event_type = EVENT_NONE;
         event.subsecond = 0;
 
@@ -659,12 +655,6 @@ void cb_alarm_btn_extwake(void) {
 
 void cb_alarm_fired(void) {
     movement_state.needs_background_tasks_handled = true;
-}
-
-void cb_a4_extwake(void) {
-    // wake up for LED, then back to sleep
-    movement_state.le_mode_ticks = 1;
-    movement_illuminate_led();
 }
 
 void cb_fast_tick(void) {
