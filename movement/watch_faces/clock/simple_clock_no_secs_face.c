@@ -58,8 +58,6 @@ void simple_clock_no_secs_face_activate(movement_settings_t *settings, void *con
 
     // show alarm indicator if there is an active alarm
     _update_alarm_indicator(settings->bit.alarm_enabled, state);
-
-    watch_clear_indicator(WATCH_INDICATOR_BELL);
     watch_set_colon();
 
     // this ensures that none of the timestamp fields will match, so we can re-render them all.
